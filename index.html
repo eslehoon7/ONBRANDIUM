@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온브랜디움 | 브랜드의 가치를 디자인으로 증명합니다</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="온브랜디움은 프리미엄 웹사이트 제작 전문 업체입니다. 고급스러운 디자인과 혁신적인 UX로 브랜드 가치를 높입니다.">
+    <meta property="og:title" content="온브랜디움 (Onbrandium)">
+    <meta property="og:description" content="미학적 완성도와 기술력이 결합된 프리미엄 웹 에이전시">
+    <meta property="og:type" content="website">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cyan: {
+                DEFAULT: '#00E5FF',
+                50: '#E0FDFF',
+                100: '#B3F9FF',
+                200: '#80F5FF',
+                300: '#4DF1FF',
+                400: '#1AEEFF',
+                500: '#00E5FF',
+                600: '#00B7CC',
+                700: '#008999',
+                800: '#005B66',
+                900: '#002D33',
+              }
+            },
+            fontFamily: {
+              sans: ['Pretendard', 'Inter', 'system-ui', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+    <!-- Fonts (Pretendard) -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+      body {
+        background-color: #000000;
+        color: #ffffff;
+        font-family: 'Pretendard', sans-serif;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .text-glow {
+        text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+      }
+      .bg-gradient-premium {
+        background: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>
