@@ -54,7 +54,13 @@ const App: React.FC = () => {
           await batch.commit();
           setPortfolio(INITIAL_PORTFOLIO);
         } else {
-          const loadedPortfolio = querySnapshot.docs.map(docSnap => docSnap.data() as PortfolioItem);
+          const loadedPortfolio = querySnapshot.docs.map(docSnap => {
+            const data = docSnap.data();
+            return {
+              ...data,
+              id: data.id || docSnap.id
+            } as PortfolioItem;
+          });
           setPortfolio(loadedPortfolio);
         }
       } catch (error) {
@@ -83,7 +89,9 @@ const App: React.FC = () => {
         });
         
         portfolio.forEach(item => {
-          batch.set(doc(collection(db, 'portfolio'), item.id), item);
+          if (item.id) {
+            batch.set(doc(collection(db, 'portfolio'), item.id), item);
+          }
         });
         
         await batch.commit();

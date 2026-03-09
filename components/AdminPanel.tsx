@@ -162,8 +162,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
                 <h2 className="text-xl font-bold">포트폴리오 리스트 ({portfolio.length})</h2>
                 <button onClick={handleAddPortfolio} className="bg-cyan-400 text-black px-6 py-2 rounded-full font-bold text-xs hover:scale-105 transition-all">새 프로젝트 추가</button>
               </div>
-              {portfolio.map(item => (
-                <div key={item.id} className={`p-4 bg-neutral-900 border ${editingPortfolio?.id === item.id ? 'border-cyan-400' : 'border-white/5'} rounded-xl flex items-center justify-between cursor-pointer hover:bg-neutral-800 transition-all`} onClick={() => setEditingPortfolio(item)}>
+              {portfolio.map((item, index) => (
+                <div key={item.id || index} className={`p-4 bg-neutral-900 border ${editingPortfolio?.id === item.id ? 'border-cyan-400' : 'border-white/5'} rounded-xl flex items-center justify-between cursor-pointer hover:bg-neutral-800 transition-all`} onClick={() => setEditingPortfolio(item)}>
                   <div className="flex items-center gap-4">
                     <img src={item.imageUrl} className="w-16 h-12 object-cover rounded-lg" alt="" />
                     <div><h4 className="font-bold">{item.title}</h4><p className="text-xs text-white/40">{item.category}</p></div>

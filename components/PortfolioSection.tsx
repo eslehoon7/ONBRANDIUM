@@ -109,7 +109,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {categoryPortfolio.map((item, index) => (
                   <div 
-                    key={item.id} 
+                    key={item.id || index} 
                     onClick={() => onSelectProject(item)}
                     className="group relative cursor-pointer"
                   >
