@@ -4,6 +4,8 @@ export interface PortfolioItem {
   category: string;
   imageUrl: string;
   description: string;
+  fullImageUrl?: string;
+  mobileImageUrl?: string;
 }
 
 export interface SiteConfig {

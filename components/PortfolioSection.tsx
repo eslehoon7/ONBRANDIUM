@@ -1,6 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { SiteConfig, PortfolioItem } from '../types';
+import { getDirectImageUrl } from '../src/utils';
 
 interface PortfolioSectionProps {
   config: SiteConfig;
@@ -43,7 +44,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
       description: cat === '랜딩홈페이지' 
         ? '브랜드의 가치를 전달하는 매력적인 랜딩페이지' 
         : cat === '자동화기록' 
-          ? '데이터를 시각화하고 비즈니스 인사이트를 제공하는 시스템' 
+          ? '데이터 시각화 및 비즈니스 인사이트 제공 시스템' 
           : '사용자 경험을 극대화하는 스마트 알림 플랫폼'
     };
   });
@@ -73,14 +74,14 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
             style={{ animationDelay: isVisible ? `${0.4 + index * 0.2}s` : '0s' }}
           >
             <img 
-              src={card.coverImage} 
+              src={getDirectImageUrl(card.coverImage)} 
               alt={card.title} 
               className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-70 group-hover:opacity-100"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-8 transition-opacity duration-300">
               <span className="text-xs font-bold tracking-[0.3em] uppercase mb-3" style={{ color: config.accentColor }}>{card.count} PROJECTS</span>
               <h3 className="text-3xl font-black tracking-tight mb-3">{card.title}</h3>
-              <p className="text-white/70 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">{card.description}</p>
+              <p className="text-white/70 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 line-clamp-1">{card.description}</p>
             </div>
             
             {/* Overlay with CTA */}
@@ -115,7 +116,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
                   >
                     <div className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-neutral-900 border border-white/5 shadow-lg">
                       <img 
-                        src={item.imageUrl} 
+                        src={getDirectImageUrl(item.imageUrl)} 
                         alt={item.title} 
                         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-70 group-hover:opacity-100"
                       />

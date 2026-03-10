@@ -19,7 +19,7 @@ export default function PortfolioSection({ portfolio, onSelectProject }: Portfol
       count: items.length,
       coverImage: items.length > 0 ? items[0].imageUrl : 'https://picsum.photos/seed/placeholder/1200/800',
       description: category === '랜딩홈페이지' ? '브랜드의 가치를 극대화하는 웹 경험' : 
-                   category === '자동화기록' ? '데이터 기반의 스마트한 비즈니스 솔루션' : 
+                   category === '자동화기록' ? '데이터 기반 비즈니스 솔루션' : 
                    '효율성을 높이는 지능형 알림 시스템'
     };
   });
@@ -47,17 +47,15 @@ export default function PortfolioSection({ portfolio, onSelectProject }: Portfol
               className="group cursor-pointer"
               onClick={() => setSelectedCategoryView(card.category)}
             >
-              <div className="relative aspect-[4/5] mb-6 overflow-hidden bg-white/5 rounded-2xl">
+              <div className="relative aspect-[4/5] w-full mb-6 overflow-hidden bg-white/5 rounded-2xl">
                 <img 
                   src={card.coverImage} 
                   alt={card.category} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />
-                <div className="absolute top-6 right-6 bg-black/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium border border-white/10">
-                  {card.count} Projects
-                </div>
+                
                 <div className="absolute bottom-6 left-6 right-6">
                   <div className="bg-black/80 backdrop-blur-sm p-6 rounded-xl transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 border border-white/10">
                     <div className="flex items-center justify-between">
@@ -67,8 +65,13 @@ export default function PortfolioSection({ portfolio, onSelectProject }: Portfol
                   </div>
                 </div>
               </div>
-              <h3 className="text-2xl font-bold mb-2">{card.category}</h3>
-              <p className="text-gray-400">{card.description}</p>
+              <div className="flex flex-col items-start w-full">
+                <span className="text-sm font-bold text-white/50 uppercase tracking-widest mb-3 leading-none">
+                  {card.count} Projects
+                </span>
+                <h3 className="text-2xl font-bold mb-3 leading-tight whitespace-nowrap">{card.category}</h3>
+                <p className="text-gray-400 break-keep">{card.description}</p>
+              </div>
             </div>
           ))}
         </div>

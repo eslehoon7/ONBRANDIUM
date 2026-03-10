@@ -5,6 +5,7 @@ import { collection, getDocs, doc, writeBatch } from 'firebase/firestore';
 import { db } from './src/firebase';
 import { SiteConfig, PortfolioItem, ViewMode } from './types';
 import { DEFAULT_CONFIG, INITIAL_PORTFOLIO } from './constants';
+import { getDirectImageUrl } from './src/utils';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
@@ -153,21 +154,39 @@ const App: React.FC = () => {
             {selectedProject && (
               <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 md:p-12 animate-in fade-in duration-300">
                 <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setSelectedProject(null)}></div>
-                <div className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-neutral-900 border border-white/10 rounded-3xl shadow-2xl flex flex-col md:flex-row gap-8 p-6 md:p-10">
+                <div className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-neutral-900 border border-white/10 rounded-3xl shadow-2xl flex flex-col gap-8 p-6 md:p-10">
                   <button onClick={() => setSelectedProject(null)} className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/20 transition-all z-10">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
-                  <div className="w-full md:w-3/5 rounded-2xl overflow-hidden border border-white/5">
-                    <img src={selectedProject.imageUrl} alt={selectedProject.title} className="w-full h-full object-cover"/>
-                  </div>
-                  <div className="w-full md:w-2/5 flex flex-col justify-center">
-                    <span className="text-xs font-bold tracking-[0.3em] uppercase mb-4" style={{ color: config.accentColor }}>{selectedProject.category}</span>
-                    <h2 className="text-3xl md:text-5xl font-black tracking-tighter mb-6 leading-tight">{selectedProject.title}</h2>
-                    <p className="text-white/60 text-lg leading-relaxed mb-10">{selectedProject.description}</p>
-                    <div className="pt-8 border-t border-white/5">
-                      <a href="#contact" onClick={() => setSelectedProject(null)} className="inline-block px-10 py-4 rounded-xl font-bold text-sm transition-all hover:scale-105 active:scale-95 text-center" style={{ backgroundColor: config.accentColor, color: '#000' }}>SIMILAR PROJECT INQUIRY</a>
+                  
+                  <div className="flex flex-col md:flex-row gap-8">
+                    <div className="w-full md:w-3/5 rounded-2xl overflow-hidden border border-white/5 shrink-0">
+                      <img src={getDirectImageUrl(selectedProject.imageUrl)} alt={selectedProject.title} className="w-full h-auto object-cover"/>
+                    </div>
+                    <div className="w-full md:w-2/5 flex flex-col justify-center">
+                      <span className="text-xs font-bold tracking-[0.3em] uppercase mb-4" style={{ color: config.accentColor }}>{selectedProject.category}</span>
+                      <h2 className="text-3xl md:text-5xl font-black tracking-tighter mb-6 leading-tight">{selectedProject.title}</h2>
+                      <p className="text-white/60 text-lg leading-relaxed mb-10">{selectedProject.description}</p>
+                      <div className="pt-8 border-t border-white/5">
+                        <a href="#contact" onClick={() => setSelectedProject(null)} className="inline-block px-10 py-4 rounded-xl font-bold text-sm transition-all hover:scale-105 active:scale-95 text-center" style={{ backgroundColor: config.accentColor, color: '#000' }}>SIMILAR PROJECT INQUIRY</a>
+                      </div>
                     </div>
                   </div>
+
+                  {(selectedProject.fullImageUrl || selectedProject.mobileImageUrl) && (
+                    <div className="flex flex-col gap-12 pt-12 border-t border-white/10 mt-4">
+                      {selectedProject.fullImageUrl && (
+                        <div className="w-full rounded-2xl overflow-hidden border border-white/5">
+                          <img src={getDirectImageUrl(selectedProject.fullImageUrl)} alt={`${selectedProject.title} Full View`} className="w-full h-auto" />
+                        </div>
+                      )}
+                      {selectedProject.mobileImageUrl && (
+                        <div className="w-full max-w-sm mx-auto rounded-[2.5rem] overflow-hidden border-[8px] border-neutral-800 shadow-2xl">
+                          <img src={getDirectImageUrl(selectedProject.mobileImageUrl)} alt={`${selectedProject.title} Mobile View`} className="w-full h-auto" />
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

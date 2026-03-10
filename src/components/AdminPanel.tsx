@@ -31,6 +31,8 @@ export default function AdminPanel({ config, setConfig, portfolio, setPortfolio,
       category: '랜딩홈페이지',
       imageUrl: 'https://picsum.photos/seed/new/1200/800',
       description: '프로젝트 설명을 입력하세요.',
+      fullImageUrl: '',
+      mobileImageUrl: '',
     };
 
     try {
@@ -52,6 +54,8 @@ export default function AdminPanel({ config, setConfig, portfolio, setPortfolio,
         category: updatedItem.category,
         imageUrl: updatedItem.imageUrl,
         description: updatedItem.description,
+        fullImageUrl: updatedItem.fullImageUrl || '',
+        mobileImageUrl: updatedItem.mobileImageUrl || '',
       });
       setPortfolio((prev) => prev.map((item) => (item.id === updatedItem.id ? updatedItem : item)));
       setEditingItem(null);
@@ -73,7 +77,7 @@ export default function AdminPanel({ config, setConfig, portfolio, setPortfolio,
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, item: PortfolioItem) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, item: PortfolioItem, field: 'imageUrl' | 'fullImageUrl' | 'mobileImageUrl' = 'imageUrl') => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -83,7 +87,7 @@ export default function AdminPanel({ config, setConfig, portfolio, setPortfolio,
       await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(storageRef);
       
-      setEditingItem({ ...item, imageUrl: downloadURL });
+      setEditingItem({ ...item, [field]: downloadURL });
     } catch (error) {
       console.error("Error uploading image: ", error);
       alert("이미지 업로드 중 오류가 발생했습니다.");
@@ -312,7 +316,7 @@ export default function AdminPanel({ config, setConfig, portfolio, setPortfolio,
                           type="file"
                           accept="image/*"
                           className="hidden"
-                          onChange={(e) => handleImageUpload(e, editingItem)}
+                          onChange={(e) => handleImageUpload(e, editingItem, 'imageUrl')}
                           disabled={uploadingImage}
                         />
                       </label>
@@ -320,6 +324,72 @@ export default function AdminPanel({ config, setConfig, portfolio, setPortfolio,
                     {editingItem.imageUrl && (
                       <div className="w-32 aspect-video bg-gray-100 rounded-lg overflow-hidden shrink-0 border border-gray-200">
                         <img src={editingItem.imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">전체 이미지 (상세보기용)</label>
+                  <div className="flex gap-4 items-start">
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        value={editingItem.fullImageUrl || ''}
+                        onChange={(e) => setEditingItem({ ...editingItem, fullImageUrl: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none mb-2"
+                        placeholder="전체 이미지 URL 입력 또는 파일 업로드"
+                      />
+                      <label className="flex items-center justify-center gap-2 w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                        <Upload size={18} className="text-gray-500" />
+                        <span className="text-sm text-gray-600">
+                          {uploadingImage ? '업로드 중...' : '이미지 파일 업로드'}
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleImageUpload(e, editingItem, 'fullImageUrl')}
+                          disabled={uploadingImage}
+                        />
+                      </label>
+                    </div>
+                    {editingItem.fullImageUrl && (
+                      <div className="w-32 aspect-video bg-gray-100 rounded-lg overflow-hidden shrink-0 border border-gray-200">
+                        <img src={editingItem.fullImageUrl} alt="Preview" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">모바일용 이미지 (상세보기용)</label>
+                  <div className="flex gap-4 items-start">
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        value={editingItem.mobileImageUrl || ''}
+                        onChange={(e) => setEditingItem({ ...editingItem, mobileImageUrl: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none mb-2"
+                        placeholder="모바일 이미지 URL 입력 또는 파일 업로드"
+                      />
+                      <label className="flex items-center justify-center gap-2 w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                        <Upload size={18} className="text-gray-500" />
+                        <span className="text-sm text-gray-600">
+                          {uploadingImage ? '업로드 중...' : '이미지 파일 업로드'}
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleImageUpload(e, editingItem, 'mobileImageUrl')}
+                          disabled={uploadingImage}
+                        />
+                      </label>
+                    </div>
+                    {editingItem.mobileImageUrl && (
+                      <div className="w-32 aspect-video bg-gray-100 rounded-lg overflow-hidden shrink-0 border border-gray-200">
+                        <img src={editingItem.mobileImageUrl} alt="Preview" className="w-full h-full object-cover" />
                       </div>
                     )}
                   </div>

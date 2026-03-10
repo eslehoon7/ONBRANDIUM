@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { SiteConfig, PortfolioItem } from '../types';
 import { GoogleGenAI } from "@google/genai";
+import { getDirectImageUrl } from '../src/utils';
 
 interface AdminPanelProps {
   config: SiteConfig;
@@ -165,7 +166,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
               {portfolio.map((item, index) => (
                 <div key={item.id || index} className={`p-4 bg-neutral-900 border ${editingPortfolio?.id === item.id ? 'border-cyan-400' : 'border-white/5'} rounded-xl flex items-center justify-between cursor-pointer hover:bg-neutral-800 transition-all`} onClick={() => setEditingPortfolio(item)}>
                   <div className="flex items-center gap-4">
-                    <img src={item.imageUrl} className="w-16 h-12 object-cover rounded-lg" alt="" />
+                    <img src={getDirectImageUrl(item.imageUrl)} className="w-16 h-12 object-cover rounded-lg" alt="" />
                     <div><h4 className="font-bold">{item.title}</h4><p className="text-xs text-white/40">{item.category}</p></div>
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); handleDeletePortfolio(item.id); }} className="text-red-500 hover:text-red-400 p-2">삭제</button>
@@ -193,6 +194,18 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
                       <option value="자동화기록">자동화기록</option>
                       <option value="자동화알림">자동화알림</option>
                     </select>
+                  </label>
+                  <label className="block">
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-white/40 mb-1 block">Main Image URL</span>
+                    <input name="imageUrl" value={editingPortfolio.imageUrl} onChange={handleUpdatePortfolioItem} className="w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
+                  </label>
+                  <label className="block">
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-white/40 mb-1 block">Full Image URL (Detail View)</span>
+                    <input name="fullImageUrl" value={editingPortfolio.fullImageUrl || ''} onChange={handleUpdatePortfolioItem} className="w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
+                  </label>
+                  <label className="block">
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-white/40 mb-1 block">Mobile Image URL (Detail View)</span>
+                    <input name="mobileImageUrl" value={editingPortfolio.mobileImageUrl || ''} onChange={handleUpdatePortfolioItem} className="w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
                   </label>
                   <label className="block">
                     <div className="flex justify-between items-end mb-1">

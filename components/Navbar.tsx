@@ -35,7 +35,7 @@ const Navbar: React.FC<NavbarProps> = ({ config }) => {
   };
 
   return (
-    <nav className={`fixed top-0 w-full z-40 transition-all duration-300 ${isScrolled ? 'py-4 glass' : 'py-8 bg-transparent'}`}>
+    <nav className={`fixed top-0 w-full z-40 transition-all duration-300 ${isScrolled ? 'py-4 bg-black/80 backdrop-blur-md border-b border-white/10' : 'py-8 bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         <button 
           onClick={(e) => window.scrollTo({ top: 0, behavior: 'smooth' })} 
