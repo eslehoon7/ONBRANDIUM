@@ -1,14 +1,80 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { INITIAL_PORTFOLIO, DEFAULT_CONFIG } from './constants';
 import { PortfolioItem } from './types';
 import Footer from './components/Footer';
 import PortfolioSection from './components/PortfolioSection';
 import { X } from 'lucide-react';
+import { collection, getDocs, doc, writeBatch } from 'firebase/firestore';
+import { db } from './firebase';
 
 function App() {
   const [config] = useState(DEFAULT_CONFIG);
-  const [portfolio] = useState<PortfolioItem[]>(INITIAL_PORTFOLIO);
+  const [portfolio, setPortfolio] = useState<PortfolioItem[]>(INITIAL_PORTFOLIO);
+  const [isPortfolioLoaded, setIsPortfolioLoaded] = useState(false);
   const [selectedProject, setSelectedProject] = useState<PortfolioItem | null>(null);
+
+  useEffect(() => {
+    const loadPortfolio = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'portfolio'));
+        if (querySnapshot.empty) {
+          const batch = writeBatch(db);
+          INITIAL_PORTFOLIO.forEach((item) => {
+            const docRef = doc(collection(db, 'portfolio'), item.id);
+            batch.set(docRef, item);
+          });
+          await batch.commit();
+          setPortfolio(INITIAL_PORTFOLIO);
+        } else {
+          const loadedPortfolio = querySnapshot.docs.map(docSnap => {
+            const data = docSnap.data();
+            return {
+              ...data,
+              id: data.id || docSnap.id
+            } as PortfolioItem;
+          });
+          setPortfolio(loadedPortfolio);
+        }
+      } catch (error) {
+        console.error("Error loading portfolio from Firestore:", error);
+        setPortfolio(INITIAL_PORTFOLIO);
+      } finally {
+        setIsPortfolioLoaded(true);
+      }
+    };
+    loadPortfolio();
+  }, []);
+
+  useEffect(() => {
+    if (!isPortfolioLoaded) return;
+    
+    const savePortfolio = async () => {
+      try {
+        const batch = writeBatch(db);
+        const querySnapshot = await getDocs(collection(db, 'portfolio'));
+        
+        const currentIds = new Set(portfolio.map(p => p.id));
+        querySnapshot.docs.forEach(docSnap => {
+          if (!currentIds.has(docSnap.id)) {
+            batch.delete(docSnap.ref);
+          }
+        });
+        
+        portfolio.forEach(item => {
+          if (item.id) {
+            batch.set(doc(collection(db, 'portfolio'), item.id), item);
+          }
+        });
+        
+        await batch.commit();
+      } catch (error) {
+        console.error("Error saving portfolio to Firestore:", error);
+      }
+    };
+
+    const timeoutId = setTimeout(savePortfolio, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [portfolio, isPortfolioLoaded]);
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black">
