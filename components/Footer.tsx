@@ -31,7 +31,15 @@ const Footer: React.FC<FooterProps> = ({ config, viewMode, onToggleViewMode }) =
           >
             {config.logoUrl ? (
               <>
-                <img src={config.logoUrl} alt={config.companyName} className="h-10 object-contain" referrerPolicy="no-referrer" />
+                <img 
+                  src={config.logoUrl} 
+                  alt={config.companyName} 
+                  className="h-8 sm:h-10 w-auto object-contain" 
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
                 <span>{config.companyName}</span>
               </>
             ) : (

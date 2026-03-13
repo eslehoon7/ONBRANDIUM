@@ -34,7 +34,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
         <h2 className={`text-3xl md:text-6xl font-black mb-6 italic tracking-tighter uppercase opacity-0 ${isVisible ? 'animate-[slideDown_0.8s_ease-out_forwards]' : ''}`}>
           Let's build your vision.
         </h2>
-        <p className={`text-lg text-white/50 max-w-2xl mx-auto opacity-0 ${isVisible ? 'animate-[slideDown_0.8s_ease-out_0.2s_forwards]' : ''}`}>
+        <p className={`text-lg text-white/50 max-w-2xl mx-auto opacity-0 ${isVisible ? 'animate-[slideDown_0.8s_ease-out_0.2s_forwards]' : ''} break-keep`}>
           당신의 브랜드가 가진 잠재력을 최상의 디자인으로 끌어올립니다.
         </p>
       </div>

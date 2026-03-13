@@ -38,7 +38,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ config }) => {
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className={`text-4xl md:text-5xl font-bold mb-8 leading-tight opacity-0 ${isVisible ? 'animate-[slideDown_0.8s_ease-out_forwards]' : ''}`}>
+            <h2 className={`text-4xl md:text-5xl font-bold mb-8 leading-tight opacity-0 ${isVisible ? 'animate-[slideDown_0.8s_ease-out_forwards]' : ''} break-keep`}>
               압도적인 전문성으로 <br/>
               <span style={{ color: config.accentColor }}>결과를 디자인합니다</span>
             </h2>
@@ -65,7 +65,14 @@ const AboutSection: React.FC<AboutSectionProps> = ({ config }) => {
             style={{ animationDelay: isVisible ? `${0.2 + features.length * 0.2 + 0.2}s` : '0s' }}
           >
             <div className="absolute -inset-4 bg-cyan-500/10 rounded-2xl blur-2xl group-hover:bg-cyan-500/20 transition-all"></div>
-            <img src="https://picsum.photos/seed/work/800/600" className="relative rounded-xl border border-white/10 shadow-2xl" alt="Work process" />
+            <img 
+              src="https://picsum.photos/seed/work/800/600" 
+              className="relative w-full h-auto rounded-xl border border-white/10 shadow-2xl" 
+              alt="Work process" 
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'https://picsum.photos/800/600';
+              }}
+            />
           </div>
         </div>
       </div>

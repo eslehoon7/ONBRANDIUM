@@ -6,10 +6,10 @@ export const getDirectImageUrl = (url: string): string => {
   const match = url.match(driveRegex);
   
   if (match && match[1]) {
-    // Use Google Drive's thumbnail endpoint with a large size parameter (w3000-h3000) 
-    // to ensure high resolution. The previous lh3.googleusercontent.com/d/ endpoint 
-    // often compresses images heavily.
-    return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w3000-h3000`;
+    // Use the 'uc' (User Content) endpoint with export=view.
+    // This serves the exact original file byte-for-byte without any Google Drive compression or resizing,
+    // ensuring the absolute highest possible quality (original resolution) for desktop viewing.
+    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
   }
   
   return url;

@@ -39,11 +39,19 @@ const Navbar: React.FC<NavbarProps> = ({ config }) => {
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         <button 
           onClick={(e) => window.scrollTo({ top: 0, behavior: 'smooth' })} 
-          className="text-2xl font-black tracking-tighter flex items-center space-x-2 bg-transparent border-none cursor-pointer"
+          className="text-lg md:text-2xl font-black tracking-tighter flex items-center space-x-2 bg-transparent border-none cursor-pointer"
         >
           {config.logoUrl ? (
             <>
-              <img src={config.logoUrl} alt={config.companyName} className="h-8 object-contain" referrerPolicy="no-referrer" />
+              <img 
+                src={config.logoUrl} 
+                alt={config.companyName} 
+                className="h-6 sm:h-8 w-auto object-contain" 
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
               <span>{config.companyName}</span>
             </>
           ) : (
@@ -60,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ config }) => {
         </div>
         <button 
           onClick={(e) => scrollToSection(e, 'contact')}
-          className="border border-white/20 px-6 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-black transition-all bg-transparent"
+          className="hidden sm:block border border-white/20 px-6 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-black transition-all bg-transparent"
         >
           START PROJECT
         </button>

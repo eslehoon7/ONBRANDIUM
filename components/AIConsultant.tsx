@@ -60,10 +60,10 @@ const AIConsultant: React.FC<AIConsultantProps> = ({ config }) => {
   };
 
   return (
-    <div className="fixed bottom-6 left-6 z-[60]">
+    <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-[60]">
       {isOpen ? (
-        <div className="w-[380px] h-[550px] bg-neutral-900/95 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 duration-500">
-          <div className="p-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+        <div className="w-[calc(100vw-2rem)] sm:w-[380px] h-[500px] sm:h-[550px] bg-neutral-900/95 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 duration-500">
+          <div className="p-4 sm:p-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ backgroundColor: config.accentColor }}></div>

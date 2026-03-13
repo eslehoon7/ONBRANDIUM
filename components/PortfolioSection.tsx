@@ -38,7 +38,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
     const items = portfolio.filter(p => p.category === cat);
     return {
       category: cat,
-      coverImage: items.length > 0 ? items[0].imageUrl : `https://picsum.photos/seed/${cat}/800/600`,
+      coverImage: items.length > 0 ? items[0].imageUrl : `https://picsum.photos/seed/${encodeURIComponent(cat)}/800/600`,
       count: items.length,
       title: cat,
       description: cat === '랜딩홈페이지' 
@@ -76,7 +76,11 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
             <img 
               src={getDirectImageUrl(card.coverImage)} 
               alt={card.title} 
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-70 group-hover:opacity-100"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-70 group-hover:opacity-100"
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${encodeURIComponent(card.category)}/800/600`;
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-8 transition-opacity duration-300">
               <span className="text-xs font-bold tracking-[0.3em] uppercase mb-3" style={{ color: config.accentColor }}>{card.count} PROJECTS</span>
@@ -94,11 +98,11 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
 
       {/* Category Projects Modal */}
       {selectedCategoryView && (
-        <div className="fixed inset-0 z-[90] flex items-center justify-center p-6 md:p-12 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[90] flex items-center justify-center p-4 md:p-12 animate-in fade-in duration-300">
           <div className="absolute inset-0 bg-black/95 backdrop-blur-md" onClick={() => setSelectedCategoryView(null)}></div>
-          <div className="relative w-full max-w-7xl max-h-[90vh] overflow-y-auto bg-neutral-950 border border-white/10 rounded-3xl shadow-2xl p-6 md:p-12">
-            <button onClick={() => setSelectedCategoryView(null)} className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/20 transition-all z-10">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+          <div className="relative w-full max-w-7xl max-h-[90vh] overflow-y-auto bg-neutral-950 border border-white/10 rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-12">
+            <button onClick={() => setSelectedCategoryView(null)} className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/20 transition-all z-10">
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
             
             <div className="mb-12">
@@ -118,7 +122,11 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
                       <img 
                         src={getDirectImageUrl(item.imageUrl)} 
                         alt={item.title} 
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-70 group-hover:opacity-100"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-70 group-hover:opacity-100"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${item.id || 'fallback'}/800/600`;
+                        }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                       

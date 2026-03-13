@@ -69,7 +69,7 @@ const Hero: React.FC<HeroProps> = ({ config }) => {
           The Strategic Digital Artistry
         </div>
         
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[1.2] tracking-tighter mb-10 opacity-0 animate-[slideDown_0.8s_ease-out_0.2s_forwards]">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.2] tracking-tighter mb-10 opacity-0 animate-[slideDown_0.8s_ease-out_0.2s_forwards] break-keep">
           {config.heroMainText.split(' ').map((word, i) => {
             // "브랜드", "움직일", "차례" 키워드가 포함된 단어에 밑줄 적용
             const cleanWord = word.replace(/[,,.]/g, '');
@@ -88,14 +88,14 @@ const Hero: React.FC<HeroProps> = ({ config }) => {
           })}
         </h1>
 
-        <p className="text-base md:text-lg text-white/40 mb-12 max-w-xl mx-auto leading-relaxed font-light tracking-tight opacity-0 animate-[slideDown_0.8s_ease-out_0.4s_forwards]">
+        <p className="text-base md:text-lg text-white/40 mb-12 max-w-xl mx-auto leading-relaxed font-light tracking-tight opacity-0 animate-[slideDown_0.8s_ease-out_0.4s_forwards] break-keep">
           {config.heroSubText}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 opacity-0 animate-[fadeIn_1s_ease-out_0.8s_forwards]">
           <button 
             onClick={() => scrollToSection('portfolio')}
-            className="group relative px-10 py-4 rounded-xl font-bold text-sm shadow-2xl transition-all hover:-translate-y-1 active:scale-95 overflow-hidden"
+            className="group relative px-8 sm:px-10 py-4 rounded-xl font-bold text-sm shadow-2xl transition-all hover:-translate-y-1 active:scale-95 overflow-hidden w-full sm:w-auto"
             style={{ backgroundColor: config.accentColor, color: '#000' }}
           >
             <span className="relative z-10 uppercase tracking-widest">Selected Projects</span>
@@ -103,7 +103,7 @@ const Hero: React.FC<HeroProps> = ({ config }) => {
           </button>
           <button 
             onClick={() => scrollToSection('contact')}
-            className="px-10 py-4 rounded-xl font-bold text-sm border border-white/10 hover:bg-white/5 hover:border-white/20 transition-all text-center flex items-center justify-center bg-transparent text-white"
+            className="px-8 sm:px-10 py-4 rounded-xl font-bold text-sm border border-white/10 hover:bg-white/5 hover:border-white/20 transition-all text-center flex items-center justify-center bg-transparent text-white w-full sm:w-auto"
           >
             Get Consulted
           </button>
