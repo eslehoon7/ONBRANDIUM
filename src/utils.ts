@@ -6,10 +6,9 @@ export const getDirectImageUrl = (url: string): string => {
   const match = url.match(driveRegex);
   
   if (match && match[1]) {
-    // Use the 'uc' (User Content) endpoint with export=view.
-    // This serves the exact original file byte-for-byte without any Google Drive compression or resizing,
-    // ensuring the absolute highest possible quality (original resolution) for desktop viewing.
-    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+    // 모바일(Safari/Chrome)에서 drive.google.com/uc 링크가 서드파티 쿠키/리다이렉트 문제로 
+    // 차단되는(CORS) 현상을 방지하기 위해 Google의 이미지 전용 CDN(lh3) 엔드포인트를 사용합니다.
+    return `https://lh3.googleusercontent.com/d/${match[1]}`;
   }
   
   return url;
