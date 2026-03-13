@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { SiteConfig, PortfolioItem } from '../types';
 import { GoogleGenAI } from "@google/genai";
 import { getDirectImageUrl } from '../src/utils';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../src/firebase';
 
 interface AdminPanelProps {
@@ -19,6 +19,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
   const [editingPortfolio, setEditingPortfolio] = useState<PortfolioItem | null>(null);
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [isUploading, setIsUploading] = useState<Record<string, boolean>>({});
+  const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
 
   const handleConfigChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -48,21 +49,55 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
     onUpdatePortfolio(portfolio.map(p => p.id === editingPortfolio.id ? updated : p));
   };
 
+  const uploadFileWithProgress = async (file: File, path: string, fieldName: string): Promise<string> => {
+    setIsUploading(prev => ({ ...prev, [fieldName]: true }));
+    setUploadProgress(prev => ({ ...prev, [fieldName]: 0 }));
+
+    return new Promise((resolve, reject) => {
+      const storageRef = ref(storage, path);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      // 60-second timeout
+      const timeoutId = setTimeout(() => {
+        uploadTask.cancel();
+        reject(new Error("업로드 시간이 초과되었습니다. (60초)"));
+      }, 60000);
+
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadProgress(prev => ({ ...prev, [fieldName]: Math.round(progress) }));
+        }, 
+        (error) => {
+          clearTimeout(timeoutId);
+          reject(error);
+        }, 
+        async () => {
+          clearTimeout(timeoutId);
+          try {
+            const url = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve(url);
+          } catch (err) {
+            reject(err);
+          }
+        }
+      );
+    }).finally(() => {
+      setIsUploading(prev => ({ ...prev, [fieldName]: false }));
+      setUploadProgress(prev => ({ ...prev, [fieldName]: 0 }));
+    }) as Promise<string>;
+  };
+
   const handleConfigImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setIsUploading(prev => ({ ...prev, [fieldName]: true }));
     try {
-      const storageRef = ref(storage, `config/${fieldName}_${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
+      const url = await uploadFileWithProgress(file, `config/${fieldName}_${Date.now()}_${file.name}`, fieldName);
       onUpdateConfig({ ...config, [fieldName]: url });
     } catch (error) {
       console.error("Upload failed", error);
-      alert("이미지 업로드에 실패했습니다.");
-    } finally {
-      setIsUploading(prev => ({ ...prev, [fieldName]: false }));
+      alert(error instanceof Error ? error.message : "이미지 업로드에 실패했습니다.");
     }
   };
 
@@ -70,20 +105,14 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
     const file = e.target.files?.[0];
     if (!file || !editingPortfolio) return;
 
-    setIsUploading(prev => ({ ...prev, [fieldName]: true }));
     try {
-      const storageRef = ref(storage, `portfolio/${editingPortfolio.id}/${fieldName}_${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      
+      const url = await uploadFileWithProgress(file, `portfolio/${editingPortfolio.id}/${fieldName}_${Date.now()}_${file.name}`, fieldName);
       const updated = { ...editingPortfolio, [fieldName]: url };
       setEditingPortfolio(updated);
       onUpdatePortfolio(portfolio.map(p => p.id === editingPortfolio.id ? updated : p));
     } catch (error) {
       console.error("Upload failed", error);
-      alert("이미지 업로드에 실패했습니다.");
-    } finally {
-      setIsUploading(prev => ({ ...prev, [fieldName]: false }));
+      alert(error instanceof Error ? error.message : "이미지 업로드에 실패했습니다.");
     }
   };
 
@@ -162,7 +191,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
                   <div className="flex gap-2">
                     <input name="logoUrl" value={config.logoUrl || ''} onChange={handleConfigChange} placeholder="이미지 URL을 입력하세요 (비워두면 텍스트 로고 사용)" className="flex-1 w-full bg-black border border-white/10 rounded-lg px-4 py-3 focus:border-cyan-400 outline-none transition-all" />
                     <label className="bg-white/10 hover:bg-white/20 text-white px-4 py-3 rounded-lg cursor-pointer flex items-center justify-center transition-all whitespace-nowrap text-sm">
-                      {isUploading['logoUrl'] ? '업로드 중...' : '파일 첨부'}
+                      {isUploading['logoUrl'] ? `업로드 중... ${uploadProgress['logoUrl'] || 0}%` : '파일 첨부'}
                       <input type="file" accept="image/*" className="hidden" onChange={(e) => handleConfigImageUpload(e, 'logoUrl')} disabled={isUploading['logoUrl']} />
                     </label>
                   </div>
@@ -248,7 +277,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
                     <div className="flex gap-2">
                       <input name="imageUrl" value={editingPortfolio.imageUrl} onChange={handleUpdatePortfolioItem} className="flex-1 w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
                       <label className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg cursor-pointer flex items-center justify-center transition-all text-xs whitespace-nowrap">
-                        {isUploading['imageUrl'] ? '업로드 중...' : '파일 첨부'}
+                        {isUploading['imageUrl'] ? `업로드 중... ${uploadProgress['imageUrl'] || 0}%` : '파일 첨부'}
                         <input type="file" accept="image/*" className="hidden" onChange={(e) => handlePortfolioImageUpload(e, 'imageUrl')} disabled={isUploading['imageUrl']} />
                       </label>
                     </div>
@@ -258,7 +287,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
                     <div className="flex gap-2">
                       <input name="fullImageUrl" value={editingPortfolio.fullImageUrl || ''} onChange={handleUpdatePortfolioItem} className="flex-1 w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
                       <label className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg cursor-pointer flex items-center justify-center transition-all text-xs whitespace-nowrap">
-                        {isUploading['fullImageUrl'] ? '업로드 중...' : '파일 첨부'}
+                        {isUploading['fullImageUrl'] ? `업로드 중... ${uploadProgress['fullImageUrl'] || 0}%` : '파일 첨부'}
                         <input type="file" accept="image/*" className="hidden" onChange={(e) => handlePortfolioImageUpload(e, 'fullImageUrl')} disabled={isUploading['fullImageUrl']} />
                       </label>
                     </div>
@@ -268,7 +297,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
                     <div className="flex gap-2">
                       <input name="mobileImageUrl" value={editingPortfolio.mobileImageUrl || ''} onChange={handleUpdatePortfolioItem} className="flex-1 w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
                       <label className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg cursor-pointer flex items-center justify-center transition-all text-xs whitespace-nowrap">
-                        {isUploading['mobileImageUrl'] ? '업로드 중...' : '파일 첨부'}
+                        {isUploading['mobileImageUrl'] ? `업로드 중... ${uploadProgress['mobileImageUrl'] || 0}%` : '파일 첨부'}
                         <input type="file" accept="image/*" className="hidden" onChange={(e) => handlePortfolioImageUpload(e, 'mobileImageUrl')} disabled={isUploading['mobileImageUrl']} />
                       </label>
                     </div>
