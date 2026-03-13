@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { SiteConfig, PortfolioItem } from '../types';
 import { GoogleGenAI } from "@google/genai";
 import { getDirectImageUrl } from '../src/utils';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '../src/firebase';
 
 interface AdminPanelProps {
   config: SiteConfig;
@@ -16,6 +18,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
   const [activeTab, setActiveTab] = useState<'config' | 'portfolio'>('config');
   const [editingPortfolio, setEditingPortfolio] = useState<PortfolioItem | null>(null);
   const [isAiGenerating, setIsAiGenerating] = useState(false);
+  const [isUploading, setIsUploading] = useState<Record<string, boolean>>({});
 
   const handleConfigChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -43,6 +46,45 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
     const updated = { ...editingPortfolio, [name]: value };
     setEditingPortfolio(updated);
     onUpdatePortfolio(portfolio.map(p => p.id === editingPortfolio.id ? updated : p));
+  };
+
+  const handleConfigImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(prev => ({ ...prev, [fieldName]: true }));
+    try {
+      const storageRef = ref(storage, `config/${fieldName}_${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      onUpdateConfig({ ...config, [fieldName]: url });
+    } catch (error) {
+      console.error("Upload failed", error);
+      alert("이미지 업로드에 실패했습니다.");
+    } finally {
+      setIsUploading(prev => ({ ...prev, [fieldName]: false }));
+    }
+  };
+
+  const handlePortfolioImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingPortfolio) return;
+
+    setIsUploading(prev => ({ ...prev, [fieldName]: true }));
+    try {
+      const storageRef = ref(storage, `portfolio/${editingPortfolio.id}/${fieldName}_${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      
+      const updated = { ...editingPortfolio, [fieldName]: url };
+      setEditingPortfolio(updated);
+      onUpdatePortfolio(portfolio.map(p => p.id === editingPortfolio.id ? updated : p));
+    } catch (error) {
+      console.error("Upload failed", error);
+      alert("이미지 업로드에 실패했습니다.");
+    } finally {
+      setIsUploading(prev => ({ ...prev, [fieldName]: false }));
+    }
   };
 
   const generateAiDescription = async () => {
@@ -117,7 +159,13 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
               <div className="space-y-4">
                 <label className="block">
                   <span className="text-xs uppercase font-bold tracking-widest text-white/40 mb-2 block">Logo URL</span>
-                  <input name="logoUrl" value={config.logoUrl || ''} onChange={handleConfigChange} placeholder="이미지 URL을 입력하세요 (비워두면 텍스트 로고 사용)" className="w-full bg-black border border-white/10 rounded-lg px-4 py-3 focus:border-cyan-400 outline-none transition-all" />
+                  <div className="flex gap-2">
+                    <input name="logoUrl" value={config.logoUrl || ''} onChange={handleConfigChange} placeholder="이미지 URL을 입력하세요 (비워두면 텍스트 로고 사용)" className="flex-1 w-full bg-black border border-white/10 rounded-lg px-4 py-3 focus:border-cyan-400 outline-none transition-all" />
+                    <label className="bg-white/10 hover:bg-white/20 text-white px-4 py-3 rounded-lg cursor-pointer flex items-center justify-center transition-all whitespace-nowrap text-sm">
+                      {isUploading['logoUrl'] ? '업로드 중...' : '파일 첨부'}
+                      <input type="file" accept="image/*" className="hidden" onChange={(e) => handleConfigImageUpload(e, 'logoUrl')} disabled={isUploading['logoUrl']} />
+                    </label>
+                  </div>
                 </label>
                 <label className="block">
                   <span className="text-xs uppercase font-bold tracking-widest text-white/40 mb-2 block">Site Title</span>
@@ -197,15 +245,33 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
                   </label>
                   <label className="block">
                     <span className="text-[10px] uppercase font-bold tracking-widest text-white/40 mb-1 block">Main Image URL</span>
-                    <input name="imageUrl" value={editingPortfolio.imageUrl} onChange={handleUpdatePortfolioItem} className="w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
+                    <div className="flex gap-2">
+                      <input name="imageUrl" value={editingPortfolio.imageUrl} onChange={handleUpdatePortfolioItem} className="flex-1 w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
+                      <label className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg cursor-pointer flex items-center justify-center transition-all text-xs whitespace-nowrap">
+                        {isUploading['imageUrl'] ? '업로드 중...' : '파일 첨부'}
+                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handlePortfolioImageUpload(e, 'imageUrl')} disabled={isUploading['imageUrl']} />
+                      </label>
+                    </div>
                   </label>
                   <label className="block">
                     <span className="text-[10px] uppercase font-bold tracking-widest text-white/40 mb-1 block">Full Image URL (Detail View)</span>
-                    <input name="fullImageUrl" value={editingPortfolio.fullImageUrl || ''} onChange={handleUpdatePortfolioItem} className="w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
+                    <div className="flex gap-2">
+                      <input name="fullImageUrl" value={editingPortfolio.fullImageUrl || ''} onChange={handleUpdatePortfolioItem} className="flex-1 w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
+                      <label className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg cursor-pointer flex items-center justify-center transition-all text-xs whitespace-nowrap">
+                        {isUploading['fullImageUrl'] ? '업로드 중...' : '파일 첨부'}
+                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handlePortfolioImageUpload(e, 'fullImageUrl')} disabled={isUploading['fullImageUrl']} />
+                      </label>
+                    </div>
                   </label>
                   <label className="block">
                     <span className="text-[10px] uppercase font-bold tracking-widest text-white/40 mb-1 block">Mobile Image URL (Detail View)</span>
-                    <input name="mobileImageUrl" value={editingPortfolio.mobileImageUrl || ''} onChange={handleUpdatePortfolioItem} className="w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
+                    <div className="flex gap-2">
+                      <input name="mobileImageUrl" value={editingPortfolio.mobileImageUrl || ''} onChange={handleUpdatePortfolioItem} className="flex-1 w-full bg-black border border-white/10 rounded-lg px-4 py-2 text-sm" placeholder="https://..." />
+                      <label className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg cursor-pointer flex items-center justify-center transition-all text-xs whitespace-nowrap">
+                        {isUploading['mobileImageUrl'] ? '업로드 중...' : '파일 첨부'}
+                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handlePortfolioImageUpload(e, 'mobileImageUrl')} disabled={isUploading['mobileImageUrl']} />
+                      </label>
+                    </div>
                   </label>
                   <label className="block">
                     <div className="flex justify-between items-end mb-1">
