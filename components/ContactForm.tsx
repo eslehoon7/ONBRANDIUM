@@ -15,7 +15,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ config }) => {
   const [showModal, setShowModal] = useState(false);
 
   // n8n Webhook URL — 아래 주소를 실제 n8n Webhook URL로 교체하세요
-  const N8N_WEBHOOK_URL = 'YOUR_N8N_WEBHOOK_URL';
+  const N8N_WEBHOOK_URL = 'https://eslehoon.app.n8n.cloud/webhook-test/onbrandium-inquiry';
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const filteredValue = e.target.value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\s]/g, '');
