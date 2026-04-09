@@ -183,7 +183,9 @@ const App: React.FC = () => {
                         className="w-full h-auto" 
                         referrerPolicy="no-referrer"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${selectedProject.id || 'fallback'}/800/600`;
+                          const target = e.target as HTMLImageElement;
+                          target.onerror = null; // Prevent infinite loop
+                          target.src = `https://picsum.photos/seed/detail_fallback_${selectedProject.id || 'fallback'}/800/600`;
                         }}
                       />
                     </div>

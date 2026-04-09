@@ -34,11 +34,11 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
 
   const categories = ['랜딩홈페이지', '자동화기록', '자동화알림'];
   
-  const categoryCards = categories.map(cat => {
+  const categoryCards = categories.map((cat, index) => {
     const items = portfolio.filter(p => p.category === cat);
     return {
       category: cat,
-      coverImage: items.length > 0 ? items[0].imageUrl : `https://picsum.photos/seed/${encodeURIComponent(cat)}/800/600`,
+      coverImage: items.length > 0 ? items[0].imageUrl : `https://picsum.photos/seed/category_${index}/800/600`,
       count: items.length,
       title: cat,
       description: cat === '랜딩홈페이지' 
@@ -76,20 +76,22 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
             <img 
               src={getDirectImageUrl(card.coverImage)} 
               alt={card.title} 
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-70 group-hover:opacity-100"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 lg:group-hover:scale-110 opacity-70 lg:group-hover:opacity-100"
               referrerPolicy="no-referrer"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${encodeURIComponent(card.category)}/800/600`;
+                const target = e.target as HTMLImageElement;
+                target.onerror = null; // Prevent infinite loop
+                target.src = `https://picsum.photos/seed/category_fallback_${index}/800/600`;
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-8 transition-opacity duration-300">
               <span className="text-xs font-bold tracking-[0.3em] uppercase mb-3" style={{ color: config.accentColor }}>{card.count} PROJECTS</span>
               <h3 className="text-3xl font-black tracking-tight mb-3">{card.title}</h3>
-              <p className="text-white/70 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 line-clamp-1">{card.description}</p>
+              <p className="text-white/70 text-sm leading-relaxed opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 transform translate-y-0 lg:translate-y-4 lg:group-hover:translate-y-0 line-clamp-1">{card.description}</p>
             </div>
             
             {/* Overlay with CTA */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 bg-black/20">
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 lg:group-hover:opacity-100 transition-all duration-500 bg-black/20">
                <div className="px-6 py-3 rounded-full border border-white/30 backdrop-blur-md text-[10px] font-bold tracking-[0.5em] uppercase">View Category</div>
             </div>
           </div>
@@ -122,22 +124,24 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
                       <img 
                         src={getDirectImageUrl(item.imageUrl)} 
                         alt={item.title} 
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-70 group-hover:opacity-100"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 lg:group-hover:scale-105 opacity-70 lg:group-hover:opacity-100"
                         referrerPolicy="no-referrer"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${item.id || 'fallback'}/800/600`;
+                          const target = e.target as HTMLImageElement;
+                          target.onerror = null; // Prevent infinite loop
+                          target.src = `https://picsum.photos/seed/item_fallback_${index}/800/600`;
                         }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 lg:group-hover:opacity-40 transition-opacity"></div>
                       
                       {/* Overlay with CTA */}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 bg-black/20">
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 lg:group-hover:opacity-100 transition-all duration-500 bg-black/20">
                          <div className="px-6 py-3 rounded-full border border-white/30 backdrop-blur-md text-[10px] font-bold tracking-[0.5em] uppercase">View Project</div>
                       </div>
                     </div>
                     
                     <div className="mt-4">
-                      <h3 className="text-xl font-bold mb-1 group-hover:text-glow transition-all">{item.title}</h3>
+                      <h3 className="text-xl font-bold mb-1 lg:group-hover:text-glow transition-all">{item.title}</h3>
                       <p className="text-white/40 text-xs line-clamp-1">{item.description}</p>
                     </div>
                   </div>

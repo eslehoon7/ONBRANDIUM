@@ -70,7 +70,9 @@ const AboutSection: React.FC<AboutSectionProps> = ({ config }) => {
               className="relative w-full h-auto rounded-xl border border-white/10 shadow-2xl" 
               alt="Work process" 
               onError={(e) => {
-                (e.target as HTMLImageElement).src = 'https://picsum.photos/800/600';
+                const target = e.target as HTMLImageElement;
+                target.onerror = null; // Prevent infinite loop
+                target.src = 'https://picsum.photos/seed/about_fallback/800/600';
               }}
             />
           </div>
