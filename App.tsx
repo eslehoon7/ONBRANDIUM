@@ -31,7 +31,17 @@ const App: React.FC = () => {
     return DEFAULT_CONFIG;
   });
 
-  const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
+  const [portfolio, setPortfolio] = useState<PortfolioItem[]>(() => {
+    const saved = localStorage.getItem('onbrandium_portfolio');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  });
   const [isPortfolioLoaded, setIsPortfolioLoaded] = useState(false);
 
   const [viewMode, setViewMode] = useState<ViewMode>('public');
@@ -63,13 +73,9 @@ const App: React.FC = () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'portfolio'));
         if (querySnapshot.empty) {
-          const batch = writeBatch(db);
-          INITIAL_PORTFOLIO.forEach((item) => {
-            const docRef = doc(collection(db, 'portfolio'), item.id);
-            batch.set(docRef, item);
-          });
-          await batch.commit();
-          setPortfolio(INITIAL_PORTFOLIO);
+          // Do not auto-seed or reset data unless explicitly asked.
+          // Just use what is loaded (empty array) so users don't see unexpected default items coming back.
+          setPortfolio([]);
         } else {
           const loadedPortfolio = querySnapshot.docs.map(docSnap => {
             const data = docSnap.data();
@@ -82,7 +88,7 @@ const App: React.FC = () => {
         }
       } catch (error) {
         console.error("Error loading portfolio from Firestore:", error);
-        setPortfolio(INITIAL_PORTFOLIO);
+        // Do not reset to empty array, keep the cached version if an error occurs.
       } finally {
         setIsPortfolioLoaded(true);
       }
@@ -91,42 +97,43 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!isPortfolioLoaded) return;
-    
-    const savePortfolio = async () => {
-      try {
-        const batch = writeBatch(db);
-        const querySnapshot = await getDocs(collection(db, 'portfolio'));
-        
-        const currentIds = new Set(portfolio.map(p => p.id));
-        querySnapshot.docs.forEach(docSnap => {
-          if (!currentIds.has(docSnap.id)) {
-            batch.delete(docSnap.ref);
-          }
-        });
-        
-        portfolio.forEach(item => {
-          if (item.id) {
-            batch.set(doc(collection(db, 'portfolio'), item.id), item);
-          }
-        });
-        
-        await batch.commit();
-      } catch (error) {
-        console.error("Error saving portfolio to Firestore:", error);
-      }
-    };
-
-    const timeoutId = setTimeout(savePortfolio, 1000);
-    return () => clearTimeout(timeoutId);
+    if (isPortfolioLoaded && portfolio.length >= 0) {
+      localStorage.setItem('onbrandium_portfolio', JSON.stringify(portfolio));
+    }
   }, [portfolio, isPortfolioLoaded]);
 
   const handleUpdateConfig = (newConfig: SiteConfig) => {
     setConfig(newConfig);
   };
 
-  const handleUpdatePortfolio = (newPortfolio: PortfolioItem[]) => {
+  const handleUpdatePortfolio = async (newPortfolio: PortfolioItem[]) => {
+    const previousPortfolio = [...portfolio];
     setPortfolio(newPortfolio);
+    
+    // Save to Firestore explicitly only when admin updates it
+    try {
+      const batch = writeBatch(db);
+      const querySnapshot = await getDocs(collection(db, 'portfolio'));
+      
+      const currentIds = new Set(newPortfolio.map(p => p.id));
+      querySnapshot.docs.forEach(docSnap => {
+        if (!currentIds.has(docSnap.id)) {
+          batch.delete(docSnap.ref);
+        }
+      });
+      
+      newPortfolio.forEach(item => {
+        if (item.id) {
+          batch.set(doc(collection(db, 'portfolio'), item.id), item);
+        }
+      });
+      
+      await batch.commit();
+    } catch (error) {
+      console.error("Error saving portfolio to Firestore:", error);
+      alert("포트폴리오 저장 중 오류가 발생했습니다. 원본 데이터로 되돌립니다.");
+      setPortfolio(previousPortfolio);
+    }
   };
 
   return (
@@ -184,8 +191,8 @@ const App: React.FC = () => {
                         referrerPolicy="no-referrer"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.onerror = null; // Prevent infinite loop
-                          target.src = `https://picsum.photos/seed/detail_fallback_${selectedProject.id || 'fallback'}/800/600`;
+                          target.onerror = null;
+                          target.style.display = 'none';
                         }}
                       />
                     </div>

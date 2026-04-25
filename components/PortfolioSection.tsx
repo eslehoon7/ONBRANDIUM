@@ -38,14 +38,15 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
     const items = portfolio.filter(p => p.category === cat);
     return {
       category: cat,
-      coverImage: items.length > 0 ? items[0].imageUrl : `https://picsum.photos/seed/category_${index}/800/600`,
+      coverImage: items.length > 0 ? items[0].imageUrl : '', // Empty string implies no image
       count: items.length,
       title: cat,
       description: cat === '랜딩홈페이지' 
         ? '브랜드의 가치를 전달하는 매력적인 랜딩페이지' 
         : cat === '자동화기록' 
           ? '데이터 시각화 및 비즈니스 인사이트 제공 시스템' 
-          : '사용자 경험을 극대화하는 스마트 알림 플랫폼'
+          : '사용자 경험을 극대화하는 스마트 알림 플랫폼',
+      fallbackGradient: index === 0 ? 'from-[#1A2980] to-[#26D0CE]' : index === 1 ? 'from-[#1D2B64] to-[#F8CDDA]' : 'from-[#3A1C71] via-[#D76D77] to-[#FFAF7B]'
     };
   });
 
@@ -73,17 +74,21 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
             className={`group relative overflow-hidden rounded-3xl cursor-pointer opacity-0 bg-neutral-900 border border-white/5 shadow-2xl aspect-[4/5] ${isVisible ? 'animate-[fadeIn_1s_ease-out_forwards]' : ''}`}
             style={{ animationDelay: isVisible ? `${0.4 + index * 0.2}s` : '0s' }}
           >
-            <img 
-              src={getDirectImageUrl(card.coverImage)} 
-              alt={card.title} 
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 lg:group-hover:scale-110 opacity-70 lg:group-hover:opacity-100"
-              referrerPolicy="no-referrer"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null; // Prevent infinite loop
-                target.src = `https://picsum.photos/seed/category_fallback_${index}/800/600`;
-              }}
-            />
+            {card.coverImage ? (
+              <img 
+                src={getDirectImageUrl(card.coverImage)} 
+                alt={card.title} 
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 lg:group-hover:scale-110 opacity-70 lg:group-hover:opacity-100"
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.style.display = 'none';
+                }}
+              />
+            ) : (
+              <div className={`absolute inset-0 w-full h-full bg-gradient-to-br ${card.fallbackGradient} opacity-60 transition-transform duration-1000 lg:group-hover:scale-110`}></div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-8 transition-opacity duration-300">
               <span className="text-xs font-bold tracking-[0.3em] uppercase mb-3" style={{ color: config.accentColor }}>{card.count} PROJECTS</span>
               <h3 className="text-3xl font-black tracking-tight mb-3">{card.title}</h3>
@@ -128,8 +133,8 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
                         referrerPolicy="no-referrer"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.onerror = null; // Prevent infinite loop
-                          target.src = `https://picsum.photos/seed/item_fallback_${index}/800/600`;
+                          target.onerror = null;
+                          target.style.display = 'none';
                         }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 lg:group-hover:opacity-40 transition-opacity"></div>

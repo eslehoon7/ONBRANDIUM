@@ -71,8 +71,8 @@ const AboutSection: React.FC<AboutSectionProps> = ({ config }) => {
               alt="Work process" 
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                target.onerror = null; // Prevent infinite loop
-                target.src = 'https://picsum.photos/seed/about_fallback/800/600';
+                target.onerror = null;
+                target.style.display = 'none';
               }}
             />
           </div>
