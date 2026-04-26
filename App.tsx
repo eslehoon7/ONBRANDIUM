@@ -14,6 +14,7 @@ import AboutSection from './components/AboutSection';
 import AdminPanel from './components/AdminPanel';
 import AdminLogin from './components/AdminLogin';
 import ContactSection from './components/ContactSection';
+import GallerySection from './components/GallerySection';
 import AIConsultant from './components/AIConsultant';
 
 const App: React.FC = () => {
@@ -158,6 +159,11 @@ const App: React.FC = () => {
                 onSelectProject={setSelectedProject}
               />
               <AboutSection config={config} />
+              <GallerySection 
+                config={config} 
+                portfolio={portfolio} 
+                onSelectProject={setSelectedProject}
+              />
               <ContactSection config={config} />
             </main>
             <Footer 
@@ -188,11 +194,10 @@ const App: React.FC = () => {
                         src={getDirectImageUrl(selectedProject.imageUrl)} 
                         alt={selectedProject.title} 
                         className="w-full h-auto" 
-                        referrerPolicy="no-referrer"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.onerror = null;
-                          target.style.display = 'none';
+                          target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" fill="%231a1a1a"><rect width="800" height="600" fill="%231a1a1a"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="24" fill="%23555">Image not available</text><text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%23555">Check link or permissions</text></svg>';
                         }}
                       />
                     </div>
@@ -214,7 +219,6 @@ const App: React.FC = () => {
                             src={getDirectImageUrl(selectedProject.fullImageUrl)} 
                             alt={`${selectedProject.title} Full View`} 
                             className="w-full h-auto" 
-                            referrerPolicy="no-referrer"
                             onError={(e) => {
                               (e.target as HTMLImageElement).style.display = 'none';
                             }}
@@ -227,7 +231,6 @@ const App: React.FC = () => {
                             src={getDirectImageUrl(selectedProject.mobileImageUrl)} 
                             alt={`${selectedProject.title} Mobile View`} 
                             className="w-full h-auto" 
-                            referrerPolicy="no-referrer"
                             onError={(e) => {
                               (e.target as HTMLImageElement).style.display = 'none';
                             }}

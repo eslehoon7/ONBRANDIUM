@@ -79,11 +79,10 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
                 src={getDirectImageUrl(card.coverImage)} 
                 alt={card.title} 
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 lg:group-hover:scale-110 opacity-70 lg:group-hover:opacity-100"
-                referrerPolicy="no-referrer"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.onerror = null;
-                  target.style.display = 'none';
+                  target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" fill="%231a1a1a"><rect width="800" height="600" fill="%231a1a1a"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="24" fill="%23555">Image not available</text><text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%23555">Check link or permissions</text></svg>';
                 }}
               />
             ) : (
@@ -130,11 +129,10 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
                         src={getDirectImageUrl(item.imageUrl)} 
                         alt={item.title} 
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 lg:group-hover:scale-105 opacity-70 lg:group-hover:opacity-100"
-                        referrerPolicy="no-referrer"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.onerror = null;
-                          target.style.display = 'none';
+                          target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" fill="%231a1a1a"><rect width="800" height="600" fill="%231a1a1a"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="24" fill="%23555">Image not available</text><text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%23555">Check link or permissions</text></svg>';
                         }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 lg:group-hover:opacity-40 transition-opacity"></div>
