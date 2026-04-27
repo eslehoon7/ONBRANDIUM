@@ -5,7 +5,7 @@ import { collection, getDocs, doc, writeBatch } from 'firebase/firestore';
 import { db } from './src/firebase';
 import { SiteConfig, PortfolioItem, ViewMode } from './types';
 import { DEFAULT_CONFIG, INITIAL_PORTFOLIO } from './constants';
-import { getDirectImageUrl } from './src/utils';
+import { getDirectImageUrl, getResizedImageUrl } from './src/utils';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
@@ -191,9 +191,10 @@ const App: React.FC = () => {
                   <div className="flex flex-col md:flex-row gap-8">
                     <div className="w-full md:w-3/5 rounded-2xl overflow-hidden border border-white/5">
                       <img 
-                        src={getDirectImageUrl(selectedProject.imageUrl)} 
+                        src={getResizedImageUrl(selectedProject.imageUrl, 1200)} 
                         alt={selectedProject.title} 
                         className="w-full h-auto" 
+                        loading="lazy"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.onerror = null;
@@ -214,11 +215,12 @@ const App: React.FC = () => {
                   {(selectedProject.fullImageUrl || selectedProject.mobileImageUrl) && (
                     <div className="flex flex-col gap-12 pt-12 border-t border-white/10 mt-4">
                       {selectedProject.fullImageUrl && (
-                        <div className="w-full rounded-2xl overflow-hidden border border-white/5">
+                        <div className="w-full max-w-[700px] mx-auto rounded-2xl overflow-hidden border border-white/5">
                           <img 
-                            src={getDirectImageUrl(selectedProject.fullImageUrl)} 
+                            src={getResizedImageUrl(selectedProject.fullImageUrl, 1400)} 
                             alt={`${selectedProject.title} Full View`} 
                             className="w-full h-auto" 
+                            loading="lazy"
                             onError={(e) => {
                               (e.target as HTMLImageElement).style.display = 'none';
                             }}
@@ -228,9 +230,10 @@ const App: React.FC = () => {
                       {selectedProject.mobileImageUrl && (
                         <div className="w-full max-w-sm mx-auto rounded-[2.5rem] overflow-hidden border-[8px] border-neutral-800 shadow-2xl">
                           <img 
-                            src={getDirectImageUrl(selectedProject.mobileImageUrl)} 
+                            src={getResizedImageUrl(selectedProject.mobileImageUrl, 800)} 
                             alt={`${selectedProject.title} Mobile View`} 
                             className="w-full h-auto" 
+                            loading="lazy"
                             onError={(e) => {
                               (e.target as HTMLImageElement).style.display = 'none';
                             }}

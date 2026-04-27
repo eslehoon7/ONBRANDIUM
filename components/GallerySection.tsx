@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SiteConfig, PortfolioItem } from '../types';
-import { getDirectImageUrl } from '../src/utils';
+import { getDirectImageUrl, getResizedImageUrl } from '../src/utils';
 
 interface GallerySectionProps {
   config: SiteConfig;
@@ -53,9 +53,10 @@ const GallerySection: React.FC<GallerySectionProps> = ({ config, portfolio, onSe
             >
               <div className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-neutral-900 border border-white/5 shadow-lg">
                 <img 
-                  src={getDirectImageUrl(item.imageUrl)} 
+                  src={getResizedImageUrl(item.imageUrl, 800)} 
                   alt={item.title} 
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 lg:group-hover:scale-105 opacity-70 lg:group-hover:opacity-100"
+                  loading="lazy"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.onerror = null;

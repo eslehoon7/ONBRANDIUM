@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { SiteConfig, PortfolioItem } from '../types';
 import { GoogleGenAI } from "@google/genai";
-import { getDirectImageUrl } from '../src/utils';
+import { getDirectImageUrl, getResizedImageUrl } from '../src/utils';
 
 interface AdminPanelProps {
   config: SiteConfig;
@@ -166,7 +166,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdateConfig, portfol
               {portfolio.map((item, index) => (
                 <div key={item.id || index} className={`p-4 bg-neutral-900 border ${editingPortfolio?.id === item.id ? 'border-cyan-400' : 'border-white/5'} rounded-xl flex items-center justify-between cursor-pointer hover:bg-neutral-800 transition-all`} onClick={() => setEditingPortfolio(item)}>
                   <div className="flex items-center gap-4">
-                    <img src={getDirectImageUrl(item.imageUrl)} className="w-16 h-12 object-cover rounded-lg" alt="" />
+                    <img src={getResizedImageUrl(item.imageUrl, 150)} className="w-16 h-12 object-cover rounded-lg" alt="" loading="lazy" />
                     <div><h4 className="font-bold">{item.title}</h4><p className="text-xs text-white/40">{item.category}</p></div>
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); handleDeletePortfolio(item.id); }} className="text-red-500 hover:text-red-400 p-2">삭제</button>
