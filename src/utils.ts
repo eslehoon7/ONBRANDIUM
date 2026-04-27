@@ -24,6 +24,11 @@ export const getResizedImageUrl = (url: string, width?: number, quality = 80): s
   // Ignore local or relative URLs
   if (directUrl.startsWith('/') || directUrl.startsWith('data:')) return directUrl;
 
+  // postimg.cc and drive.google.com block/fail with weserv.nl, so we just return the direct URL for it.
+  if (directUrl.includes('postimg.cc') || directUrl.includes('drive.google.com')) {
+    return directUrl;
+  }
+
   // Use weserv.nl for caching, resizing, and webp conversion to improve load speed.
   // Encode the URL carefully.
   const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(directUrl)}&output=webp&q=${quality}`;
