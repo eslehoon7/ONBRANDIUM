@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>온브랜디움 | 프리미엄 디지털 에이전시</title>
+    <link>https://onbrandium.com</link>
+    <description>우리는 평범함을 거부하고, 감각적인 비주얼과 압도적인 기술력으로 당신의 비즈니스를 새로운 차원으로 이끕니다.</description>
+    <language>ko-KR</language>
+    <lastBuildDate>Thu, 07 May 2026 01:55:00 +0900</lastBuildDate>
+    <atom:link href="https://onbrandium.com/rss.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>온브랜디움 브랜드 스토리</title>
+      <link>https://onbrandium.com</link>
+      <description>브랜드, 이제 움직일 차례입니다. 프리미엄 디지털 에이전시 온브랜디움.</description>
+      <pubDate>Thu, 07 May 2026 01:55:00 +0900</pubDate>
+      <guid>https://onbrandium.com/home</guid>
+    </item>
+    
+    <item>
+      <title>삼성전자 글로벌 쇼케이스 포트폴리오</title>
+      <link>https://onbrandium.com</link>
+      <description>최첨단 기술력을 직관적이고 미학적인 인터페이스로 구현한 글로벌 통합 웹 플랫폼</description>
+      <pubDate>Thu, 07 May 2026 01:55:00 +0900</pubDate>
+      <guid>https://onbrandium.com/portfolio/1</guid>
+    </item>
+    
+    <item>
+      <title>루시엔 럭셔리 쥬얼리 포트폴리오</title>
+      <link>https://onbrandium.com</link>
+      <description>고급스러운 텍스처와 절제된 여백미를 강조한 하이엔드 온라인 부티크</description>
+      <pubDate>Thu, 07 May 2026 01:55:00 +0900</pubDate>
+      <guid>https://onbrandium.com/portfolio/2</guid>
+    </item>
+  </channel>
+</rss>
