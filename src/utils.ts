@@ -6,8 +6,8 @@ export const getDirectImageUrl = (url: string): string => {
   const match = url.match(driveRegex);
   
   if (match && match[1]) {
-    // Google Drive 링크를 이미지 태그에 직접 사용할 수 있는 형태로 변환합니다.
-    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+    // Return high resolution thumbnail to avoid Google Drive compression on uc?export=view
+    return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w2500`;
   }
   
   // Handle postimg.cc gallery links (if user accidentally pasted gallery link)
@@ -17,7 +17,7 @@ export const getDirectImageUrl = (url: string): string => {
   return url;
 };
 
-export const getResizedImageUrl = (url: string, width?: number, quality = 80): string => {
+export const getResizedImageUrl = (url: string, width?: number, quality = 100): string => {
   if (!url) return url;
   const directUrl = getDirectImageUrl(url);
   
@@ -25,7 +25,7 @@ export const getResizedImageUrl = (url: string, width?: number, quality = 80): s
   if (directUrl.startsWith('/') || directUrl.startsWith('data:')) return directUrl;
 
   // postimg.cc and drive.google.com block/fail with weserv.nl, so we just return the direct URL for it.
-  if (directUrl.includes('postimg.cc') || directUrl.includes('drive.google.com')) {
+  if (directUrl.includes('postimg.cc') || directUrl.includes('drive.google.com') || directUrl.includes('lh3.googleusercontent.com')) {
     return directUrl;
   }
 

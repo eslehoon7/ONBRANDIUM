@@ -183,7 +183,7 @@ const App: React.FC = () => {
             {selectedProject && (
               <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12 animate-in fade-in duration-300">
                 <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setSelectedProject(null)}></div>
-                <div className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-neutral-900 border border-white/10 rounded-2xl md:rounded-3xl shadow-2xl flex flex-col gap-8 p-6 md:p-10">
+                <div className="relative w-[95vw] max-w-6xl max-h-[90vh] overflow-y-auto bg-neutral-900 border border-white/10 rounded-2xl md:rounded-3xl shadow-2xl flex flex-col gap-8 p-6 md:p-10">
                   <button onClick={() => setSelectedProject(null)} className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/20 transition-all z-10">
                     <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
@@ -194,6 +194,7 @@ const App: React.FC = () => {
                         src={getResizedImageUrl(selectedProject.imageUrl, 1200)} 
                         alt={selectedProject.title} 
                         className="w-full h-auto" 
+                        referrerPolicy="no-referrer"
                         loading="lazy"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
@@ -215,28 +216,24 @@ const App: React.FC = () => {
                   {(selectedProject.fullImageUrl || selectedProject.mobileImageUrl) && (
                     <div className="flex flex-col gap-12 pt-12 border-t border-white/10 mt-4">
                       {selectedProject.fullImageUrl && (
-                        <div className="w-full max-w-[700px] mx-auto rounded-2xl overflow-hidden border border-white/5">
+                        <div className="w-full mx-auto flex justify-center rounded-2xl overflow-hidden border border-white/5">
                           <img 
-                            src={getResizedImageUrl(selectedProject.fullImageUrl, 1400)} 
+                            src={getDirectImageUrl(selectedProject.fullImageUrl)} 
                             alt={`${selectedProject.title} Full View`} 
-                            className="w-full h-auto" 
+                            className="w-1/2 h-auto block" 
+                            referrerPolicy="no-referrer"
                             loading="lazy"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                            }}
                           />
                         </div>
                       )}
                       {selectedProject.mobileImageUrl && (
                         <div className="w-full max-w-sm mx-auto rounded-[2.5rem] overflow-hidden border-[8px] border-neutral-800 shadow-2xl">
                           <img 
-                            src={getResizedImageUrl(selectedProject.mobileImageUrl, 800)} 
+                            src={getDirectImageUrl(selectedProject.mobileImageUrl)} 
                             alt={`${selectedProject.title} Mobile View`} 
-                            className="w-full h-auto" 
+                            className="w-full h-auto block" 
+                            referrerPolicy="no-referrer"
                             loading="lazy"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                            }}
                           />
                         </div>
                       )}
@@ -245,6 +242,7 @@ const App: React.FC = () => {
                 </div>
               </div>
             )}
+
 
             {/* Admin Login Modal */}
             {showLogin && (
