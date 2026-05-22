@@ -69,7 +69,7 @@ const Hero: React.FC<HeroProps> = ({ config }) => {
           The Strategic Digital Artistry
         </div>
         
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.2] tracking-tighter mb-10 opacity-0 animate-[slideDown_0.8s_ease-out_0.2s_forwards] break-keep">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.2] tracking-normal mb-10 opacity-0 animate-[slideDown_0.8s_ease-out_0.2s_forwards] break-keep">
           {config.heroMainText.split(' ').map((word, i) => {
             // "브랜드", "움직일", "차례" 키워드가 포함된 단어에 밑줄 적용
             const cleanWord = word.replace(/[,,.]/g, '');
@@ -110,9 +110,17 @@ const Hero: React.FC<HeroProps> = ({ config }) => {
         </div>
       </div>
       
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-20">
-        <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent"></div>
-      </div>
+      <button 
+        onClick={() => scrollToSection('portfolio')}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 group cursor-pointer bg-transparent border-none focus:outline-none transition-all duration-300 hover:scale-105 z-20"
+      >
+        <span className="text-[9px] font-bold tracking-[0.4em] uppercase text-white/40 group-hover:text-white group-hover:translate-y-0.5 transition-all duration-300">
+          SCROLL TO EXPLORE
+        </span>
+        <div className="w-[22px] h-[36px] rounded-full border-1.5 border-white/20 flex justify-center p-1 group-hover:border-white/50 transition-colors duration-300">
+          <div className="w-1 h-2 rounded-full bg-white/70 animate-[scrollWheel_1.6s_infinite_ease-in-out]"></div>
+        </div>
+      </button>
 
       <style>{`
         @keyframes float {
@@ -126,6 +134,11 @@ const Hero: React.FC<HeroProps> = ({ config }) => {
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
+        }
+        @keyframes scrollWheel {
+          0% { transform: translateY(0); opacity: 1; }
+          50% { transform: translateY(8px); opacity: 0.1; }
+          100% { transform: translateY(0); opacity: 1; }
         }
       `}</style>
     </section>

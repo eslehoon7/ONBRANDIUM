@@ -11,6 +11,8 @@ import Footer from './components/Footer';
 import Hero from './components/Hero';
 import PortfolioSection from './components/PortfolioSection';
 import AboutSection from './components/AboutSection';
+import ServicesSection from './components/ServicesSection';
+import PartnersMarquee from './components/PartnersMarquee';
 import AdminPanel from './components/AdminPanel';
 import AdminLogin from './components/AdminLogin';
 import ContactSection from './components/ContactSection';
@@ -153,6 +155,8 @@ const App: React.FC = () => {
             <Navbar config={config} />
             <main>
               <Hero config={config} />
+              <PartnersMarquee config={config} />
+              <ServicesSection config={config} />
               <PortfolioSection 
                 config={config} 
                 portfolio={portfolio} 

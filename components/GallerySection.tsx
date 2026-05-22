@@ -39,7 +39,7 @@ const GallerySection: React.FC<GallerySectionProps> = ({ config, portfolio, onSe
     >
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
-          <h2 className={`text-5xl md:text-7xl font-black tracking-tighter mb-4 italic opacity-0 ${isVisible ? 'animate-[slideDown_0.8s_ease-out_forwards]' : ''}`}>ALL WORKS</h2>
+          <h2 className={`text-5xl md:text-7xl font-extrabold tracking-normal leading-tight mb-4 opacity-0 ${isVisible ? 'animate-[slideDown_0.8s_ease-out_forwards]' : ''}`}>ALL WORKS</h2>
           <p className={`text-white/50 max-w-md text-lg opacity-0 ${isVisible ? 'animate-[slideDown_0.8s_ease-out_0.2s_forwards]' : ''}`}>업로드된 순서대로 모든 포트폴리오를 감상해보세요.</p>
         </div>
 

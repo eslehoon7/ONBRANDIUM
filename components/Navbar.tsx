@@ -62,15 +62,16 @@ const Navbar: React.FC<NavbarProps> = ({ config }) => {
           )}
         </button>
         <div className="hidden md:flex space-x-12 font-medium text-sm tracking-widest uppercase">
-          <button onClick={(e) => scrollToSection(e, 'portfolio')} className="hover:opacity-60 transition-opacity bg-transparent border-none cursor-pointer text-white">Portfolio</button>
-          <button onClick={(e) => scrollToSection(e, 'about')} className="hover:opacity-60 transition-opacity bg-transparent border-none cursor-pointer text-white">About</button>
-          <button onClick={(e) => scrollToSection(e, 'contact')} className="hover:opacity-60 transition-opacity bg-transparent border-none cursor-pointer text-white">Contact</button>
+          <button onClick={(e) => scrollToSection(e, 'about')} className="hover:opacity-60 transition-opacity bg-transparent border-none cursor-pointer text-white">ABOUT</button>
+          <button onClick={(e) => scrollToSection(e, 'services')} className="hover:opacity-60 transition-opacity bg-transparent border-none cursor-pointer text-white">SERVICES</button>
+          <button onClick={(e) => scrollToSection(e, 'portfolio')} className="hover:opacity-60 transition-opacity bg-transparent border-none cursor-pointer text-white">WORK</button>
+          <button onClick={(e) => scrollToSection(e, 'contact')} className="hover:opacity-60 transition-opacity bg-transparent border-none cursor-pointer text-white">CONTACT</button>
         </div>
         <button 
           onClick={(e) => scrollToSection(e, 'contact')}
           className="hidden sm:block border border-white/20 px-6 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-black transition-all bg-transparent"
         >
-          START PROJECT
+          편하게 문의하기
         </button>
       </div>
     </nav>

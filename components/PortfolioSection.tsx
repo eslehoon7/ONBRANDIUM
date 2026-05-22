@@ -61,7 +61,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ config, portfolio, 
       className="py-32 px-6 md:px-12 scroll-mt-24">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 max-w-7xl mx-auto">
         <div>
-          <h2 className={`text-5xl md:text-7xl font-black tracking-tighter mb-4 italic opacity-0 ${isVisible ? 'animate-[slideDown_0.8s_ease-out_forwards]' : ''}`}>SELECTED WORKS</h2>
+          <h2 className={`text-5xl md:text-7xl font-extrabold tracking-normal leading-tight mb-4 opacity-0 ${isVisible ? 'animate-[slideDown_0.8s_ease-out_forwards]' : ''}`}>SELECTED WORKS</h2>
           <p className={`text-white/50 max-w-md text-lg opacity-0 ${isVisible ? 'animate-[slideDown_0.8s_ease-out_0.2s_forwards]' : ''}`}>우리가 완성한 감각적인 프로젝트들을 통해 온브랜디움만의 특별함을 느껴보세요.</p>
         </div>
       </div>

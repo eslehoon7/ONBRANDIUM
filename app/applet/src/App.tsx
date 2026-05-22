@@ -72,8 +72,9 @@ function App() {
         <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
           <div className="text-2xl font-bold tracking-tighter">{config.companyName}</div>
           <div className="hidden md:flex gap-8 text-sm font-medium">
-            <a href="#work" className="hover:text-gray-500 transition-colors">WORK</a>
             <a href="#about" className="hover:text-gray-500 transition-colors">ABOUT</a>
+            <a href="#services" className="hover:text-gray-500 transition-colors">SERVICES</a>
+            <a href="#work" className="hover:text-gray-500 transition-colors">WORK</a>
             <a href="#contact" className="hover:text-gray-500 transition-colors">CONTACT</a>
           </div>
         </div>
