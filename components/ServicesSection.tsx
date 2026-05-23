@@ -31,31 +31,31 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ config }) => {
   const services = [
     {
       icon: <Palette className="w-8 h-8" />,
-      title: 'Premium Brand & UI/UX Design',
+      title: 'IDEA TO STRUCTURE · FREE CONSULTING',
       titleKo: '아이디어만 있어도 시작할 수 있어요',
       desc: '방향이 잡히지 않아도 괜찮습니다.\n원하는 분위기나 참고 사이트 하나면, 전체 페이지 구조부터 함께 잡아드립니다.',
-      features: ['브랜드 비주얼 아키텍처', '디테일 지향 인터랙션', '다이내믹 모션 프로토타이핑']
+      features: ['레퍼런스 기반 구성 제안', '페이지 구조 설계 동행', '첫 상담부터 방향 확정']
     },
     {
       icon: <Code className="w-8 h-8" />,
-      title: 'Full Stack Web Architecture',
+      title: 'ONE PERSON · END TO END DELIVERY',
       titleKo: '창구가 하나라 빠르고 정확해요',
       desc: '담당자가 여럿이면 말이 달라집니다.\n기획부터 개발까지 한 사람이 맡으니 오해 없이, 중간 단계 없이 진행됩니다.',
-      features: ['싱글 페이지 고성능 앱', '헤드리스 CMS 통합', 'SEO 최적화 마크업 설계']
+      features: ['기획·디자인·개발 1인 진행', '중간 전달 오류 없음', '빠른 피드백 반영']
     },
     {
       icon: <Cpu className="w-8 h-8" />,
-      title: 'Next-Gen AI & Automation',
+      title: 'SELF MANAGE · AFTER DELIVERY GUIDE',
       titleKo: '운영하다 막혀도 직접 고칠 수 있어요',
       desc: '납품 후 작은 수정 때문에 다시 연락하지 않아도 됩니다.\n직접 관리할 수 있도록 사용법을 함께 안내해 드립니다.',
-      features: ['AI 시스템 맞춤형 파이프라인', '지능형 자동화 시퀀스', '실시간 비즈니스 데이터 동기화']
+      features: ['납품 후 수정 가이드 제공', '직접 관리 가능한 구조 설계', '재연락 없이 운영 가능']
     },
     {
       icon: <Globe className="w-8 h-8" />,
-      title: 'Global Scale Integration',
+      title: 'PORTFOLIO FIRST · RESULT DRIVEN',
       titleKo: '비용보다 결과물이 먼저 증명해요',
       desc: '포트폴리오가 설명보다 낫습니다.\n실제 납품 결과물을 먼저 보여드리고, 그 다음에 금액을 이야기합니다.',
-      features: ['다국어 & 퍼포먼스 패치', '글로벌 CDN 에지 탑재', '실시간 이상징후 트랙킹']
+      features: ['실제 납품 결과물 선공개', '과장 없는 포트폴리오 제시', '금액보다 퀄리티 먼저 확인']
     }
   ];
 
